@@ -1,0 +1,32 @@
+{
+  "name": "react-accessories",
+  "version": "1.0.0",
+  "description": "",
+	"main": "build/index.js",
+	"module": "build/index.es.js",
+	"jsnext:main": "build/index.es.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shunkongcheung/react-accessories.git"
+  },
+  "keywords": [],
+  "files": ["build","readme.md"],
+  "author": "Shun Kong Cheung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shunkongcheung/react-accessories/issues"
+  },
+  "homepage": "https://github.com/shunkongcheung/react-accessories#readme",
+  "devDependencies": {
+    "rollup": "^1.32.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.2",
+    "rollup-plugin-typescript2": "^0.26.0",
+    "typescript": "^3.8.3"
+  }
+}

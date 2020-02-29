@@ -12,7 +12,7 @@ no content yet
 
 ## Built With
 
-* [React](http://https://reactjs.org/) - The web framework used
+* [React](http://https://reactjs.org/) - A JavaScript library for building user interfaces
 
 ## Authors
 

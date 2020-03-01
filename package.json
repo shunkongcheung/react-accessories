@@ -1,10 +1,9 @@
 {
   "name": "react-accessories",
   "version": "1.0.0",
-  "description": "",
+  "description": "A react accessories library for making CRUD restful call and handling authentication",
   "main": "build/index.js",
   "module": "build/index.es.js",
-  "jsnext:main": "build/index.es.js",
   "scripts": {
     "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,14 +24,12 @@
   },
   "homepage": "https://github.com/shunkongcheung/react-accessories#readme",
   "peerDependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
     "rollup": "^1.32.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -41,4 +38,5 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {}
+
 }

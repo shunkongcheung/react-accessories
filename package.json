@@ -6,6 +6,9 @@
   "module": "build/index.es.js",
   "scripts": {
     "build": "rollup -c",
+	  "prebuild": "rm -rf build",
+    "prepare": "npm run build",
+    "postversion": "git push && git push --tags",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,10 +16,7 @@
     "url": "git+https://github.com/shunkongcheung/react-accessories.git"
   },
   "keywords": [],
-  "files": [
-    "build",
-    "readme.md"
-  ],
+  "files": ["build","readme.md"],
   "author": "Shun Kong Cheung",
   "license": "ISC",
   "bugs": {

@@ -21,13 +21,13 @@ interface User {
 }
 function Child() {
   const auth = useAuthContext<User>();
-	const { handleTokenChange, userInfo, token, isLogined } = auth;
-	return (
+  const { handleTokenChange, userInfo, token, isLogined } = auth;
+   return (
         <>
           <pre>{JSON.stringify(userInfo, null, 4)}</pre>
           <button onClick={() => handleTokenChange('')}>logout</button>
         </>
-	);
+  );
 }
 
 function App() {

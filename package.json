@@ -1,12 +1,12 @@
 {
   "name": "react-accessories",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A react accessories library for making CRUD restful call and handling authentication",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "scripts": {
     "build": "rollup -c",
-	  "prebuild": "rm -rf build",
+    "prebuild": "rm -rf build",
     "prepare": "npm run build",
     "postversion": "git push && git push --tags",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,7 +16,10 @@
     "url": "git+https://github.com/shunkongcheung/react-accessories.git"
   },
   "keywords": [],
-  "files": ["build","readme.md"],
+  "files": [
+    "build",
+    "readme.md"
+  ],
   "author": "Shun Kong Cheung",
   "license": "ISC",
   "bugs": {

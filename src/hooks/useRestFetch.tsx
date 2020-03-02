@@ -38,7 +38,10 @@ function useRestFetch<ResultShape extends object>(
   const getAuthorization = useCallback(
     (isAuthenticated: boolean) => {
       if (!isAuthenticated) return "";
-      if (!token) console.warn("User should login before entering this page");
+      if (!token) {
+        console.warn("User should login before entering this page");
+        return "";
+      }
       return `Bearer ${token}`;
     },
     [token]
@@ -72,6 +75,8 @@ function useRestFetch<ResultShape extends object>(
 
       const body = JSON.stringify(data);
       const Authorization = getAuthorization(isAuthenticated);
+      if (isAuthenticated && !Authorization) return undefined;
+
       const headers = {
         Authorization,
         "Content-Type": "application/json"

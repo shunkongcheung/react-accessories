@@ -26,7 +26,7 @@ interface AuthContextProviderProps<T extends object> {
   defaultUser: T;
   defaultParseDetailResult?: (data: any) => ParsedResult;
   defaultParseEditResult?: (data: any) => ParsedResult;
-  defaultParseListResult?: (data: any) => ParsedListResult;
+  defaultParseListResult?: (data: any, queryParams: object) => ParsedListResult;
   notify?: (msg: string, lvl: ErrorLvl) => any;
 }
 
@@ -35,7 +35,7 @@ interface AuthContextShape<User extends object> {
   defaultApiDomain: string;
   defaultParseDetailResult: (data: any) => ParsedResult;
   defaultParseEditResult: (data: any) => ParsedResult;
-  defaultParseListResult: (data: any) => ParsedListResult;
+  defaultParseListResult: (data: any, queryParams: object) => ParsedListResult;
   handleTokenChange: (t: string) => void;
   token: string;
   isLogined: boolean;

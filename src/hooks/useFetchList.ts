@@ -20,7 +20,7 @@ interface Result<Shape> {
 interface FetchListParams<Shape extends object> {
   apiDomain?: string;
   errorLvl?: ErrorLvl;
-  parseListResult?: (data: any) => Result<Shape>;
+  parseListResult?: (data: any, queryParams: object) => Result<Shape>;
 }
 
 function useFetchList<Shape extends object>(
@@ -53,14 +53,18 @@ function useFetchList<Shape extends object>(
     async (url, params?: Params) => {
       setFetchListState(oState => ({ ...oState, loading: true }));
       const res = await restFetch(url, { ...params });
+      const { queryParams = {} } = params || {};
       if (!res) return;
-      const { currentPage, maxPage, result, errors } = parseListResult(res);
+      const { currentPage, maxPage, result, errors } = parseListResult(
+        res,
+        queryParams
+      );
       if (errors) notify(errors);
 
       setFetchListState(oState => ({
         result: result || oState.result,
         currentPage: currentPage || oState.currentPage,
-        maxPage: currentPage || oState.maxPage,
+        maxPage: maxPage || oState.maxPage,
         loading: false
       }));
     },

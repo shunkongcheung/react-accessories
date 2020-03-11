@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 
 import useRestFetch from "./useRestFetch";
+import { useAuthContext } from "../auth";
 
 type ErrorLvl = "warn" | "error" | "info";
 
@@ -9,16 +10,32 @@ interface Params {
   isAuthenticated?: boolean;
 }
 
-function useFetchList<Shape extends object>(errorLvl?: ErrorLvl) {
-  const { restFetch } = useRestFetch<Array<Shape>>(errorLvl);
+interface FetchListParams<Shape extends object> {
+  apiDomain?: string;
+  errorLvl?: ErrorLvl;
+  parseListResult?: (data: any) => { result?: Array<Shape>; errors?: any };
+}
+
+function useFetchList<Shape extends object>(
+  fetchListParams?: FetchListParams<Shape>
+) {
+  const { defaultApiDomain, defaultParseListResult } = useAuthContext();
+
+  const {
+    apiDomain = defaultApiDomain,
+    errorLvl,
+    parseListResult = defaultParseListResult
+  } = fetchListParams || {};
+
+  const { restFetch, notify } = useRestFetch<Shape>(apiDomain, errorLvl);
 
   interface FetchListState {
     loading: boolean;
-    results: Array<Shape>;
+    result: Array<Shape>;
   }
   const [fetchListState, setFetchListState] = useState<FetchListState>({
     loading: false,
-    results: []
+    result: []
   });
 
   const fetchList = useCallback(
@@ -26,9 +43,13 @@ function useFetchList<Shape extends object>(errorLvl?: ErrorLvl) {
       setFetchListState(oState => ({ ...oState, loading: true }));
       const res = await restFetch(url, { ...params });
       if (!res) return;
+      const { result, errors } = parseListResult(res);
+      if (errors) notify(errors);
 
-      const { result } = res;
-      setFetchListState({ results: result, loading: false });
+      setFetchListState(oState => ({
+        result: result || oState.result,
+        loading: false
+      }));
     },
     [restFetch]
   );

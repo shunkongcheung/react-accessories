@@ -14,6 +14,11 @@ interface ParsedResult {
   errors?: Array<Error>;
 }
 
+interface ParsedListResult extends ParsedResult {
+  currentPage?: number;
+  maxPage?: number;
+}
+
 interface AuthContextProviderProps<T extends object> {
   children: React.ReactNode;
   dataAttr?: string;
@@ -21,7 +26,7 @@ interface AuthContextProviderProps<T extends object> {
   defaultUser: T;
   defaultParseDetailResult?: (data: any) => ParsedResult;
   defaultParseEditResult?: (data: any) => ParsedResult;
-  defaultParseListResult?: (data: any) => ParsedResult;
+  defaultParseListResult?: (data: any) => ParsedListResult;
   notify?: (msg: string, lvl: ErrorLvl) => any;
 }
 
@@ -30,7 +35,7 @@ interface AuthContextShape<User extends object> {
   defaultApiDomain: string;
   defaultParseDetailResult: (data: any) => ParsedResult;
   defaultParseEditResult: (data: any) => ParsedResult;
-  defaultParseListResult: (data: any) => ParsedResult;
+  defaultParseListResult: (data: any) => ParsedListResult;
   handleTokenChange: (t: string) => void;
   token: string;
   isLogined: boolean;
@@ -43,7 +48,7 @@ const AuthContext = React.createContext<AuthContextShape<any>>({
   defaultApiDomain: "",
   defaultParseDetailResult: d => ({ result: d }),
   defaultParseEditResult: d => ({ result: d }),
-  defaultParseListResult: d => ({ result: d }),
+  defaultParseListResult: d => ({ result: d, currentPage: 1, maxPage: 1 }),
   handleTokenChange: () => {},
   notify: () => {},
   token: "",
@@ -59,7 +64,7 @@ function AuthContextProviderUnMemo<T extends object>(
     defaultApiDomain = "",
     defaultParseDetailResult = d => ({ result: d }),
     defaultParseEditResult = d => ({ result: d }),
-    defaultParseListResult = d => ({ result: d }),
+    defaultParseListResult = d => ({ result: d, currentPage: 1, maxPage: 1 }),
     children,
     defaultUser,
     notify = () => {}

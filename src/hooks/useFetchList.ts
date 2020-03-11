@@ -10,10 +10,17 @@ interface Params {
   isAuthenticated?: boolean;
 }
 
+interface Result<Shape> {
+  currentPage: number;
+  errors?: any;
+  maxPage: number;
+  result?: Array<Shape>;
+}
+
 interface FetchListParams<Shape extends object> {
   apiDomain?: string;
   errorLvl?: ErrorLvl;
-  parseListResult?: (data: any) => { result?: Array<Shape>; errors?: any };
+  parseListResult?: (data: any) => Result<Shape>;
 }
 
 function useFetchList<Shape extends object>(
@@ -30,12 +37,16 @@ function useFetchList<Shape extends object>(
   const { restFetch, notify } = useRestFetch<Shape>(apiDomain, errorLvl);
 
   interface FetchListState {
+    currentPage: number;
     loading: boolean;
+    maxPage: number;
     result: Array<Shape>;
   }
   const [fetchListState, setFetchListState] = useState<FetchListState>({
     loading: false,
-    result: []
+    result: [],
+    currentPage: 1,
+    maxPage: 1
   });
 
   const fetchList = useCallback(
@@ -43,11 +54,13 @@ function useFetchList<Shape extends object>(
       setFetchListState(oState => ({ ...oState, loading: true }));
       const res = await restFetch(url, { ...params });
       if (!res) return;
-      const { result, errors } = parseListResult(res);
+      const { currentPage, maxPage, result, errors } = parseListResult(res);
       if (errors) notify(errors);
 
       setFetchListState(oState => ({
         result: result || oState.result,
+        currentPage: currentPage || oState.currentPage,
+        maxPage: currentPage || oState.maxPage,
         loading: false
       }));
     },

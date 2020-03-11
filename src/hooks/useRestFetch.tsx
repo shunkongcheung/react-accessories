@@ -21,9 +21,10 @@ interface Params {
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
 function useRestFetch<ResultShape extends object>(
+  apiDomain: string,
   errorLvl: ErrorLvl = "error"
 ) {
-  const { defaultApiDomain, token, notify: notifyOri } = useAuthContext();
+  const { token, notify: notifyOri } = useAuthContext();
 
   const notify = useCallback((msg: string | object) => {
     if (typeof msg === "object" && msg) msg = JSON.stringify(msg, null, 4);
@@ -78,7 +79,7 @@ function useRestFetch<ResultShape extends object>(
       };
       const sQueryParams = queryParams ? `?${stringify(queryParams)}` : "";
 
-      const res = await fetch(`${defaultApiDomain}${url}${sQueryParams}`, {
+      const res = await fetch(`${apiDomain}${url}${sQueryParams}`, {
         body,
         headers,
         method

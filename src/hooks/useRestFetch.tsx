@@ -20,11 +20,6 @@ interface Params {
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
-interface ResponseShape<ResultShape extends object> {
-  result: ResultShape;
-  errors?: Array<{ msg: string; param?: string }>;
-}
-
 function useRestFetch<ResultShape extends object>(
   errorLvl: ErrorLvl = "error"
 ) {
@@ -49,12 +44,12 @@ function useRestFetch<ResultShape extends object>(
 
   type GetParsedResponse = (
     r: FetchResponse
-  ) => Promise<ResponseShape<ResultShape> | undefined>;
+  ) => Promise<ResultShape | undefined>;
   const getParsedResponse = useCallback<GetParsedResponse>(
     async res => {
       try {
         const payloadString = await res.text();
-        const payload = JSON.parse(payloadString) as ResponseShape<ResultShape>;
+        const payload = JSON.parse(payloadString) as ResultShape;
         return payload;
       } catch (ex) {
         notify(ex.message);
@@ -67,7 +62,7 @@ function useRestFetch<ResultShape extends object>(
   type RestFetch = (
     url: string,
     p?: Params
-  ) => Promise<ResponseShape<ResultShape> | undefined>;
+  ) => Promise<ResultShape | undefined>;
   const restFetch = useCallback<RestFetch>(
     async (url, params) => {
       const { data, queryParams, method = "GET", isAuthenticated = true } =

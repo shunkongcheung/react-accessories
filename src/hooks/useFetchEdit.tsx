@@ -1,5 +1,9 @@
 import { useCallback } from "react";
 import useRestFetch from "./useRestFetch";
+import { useAuthContext } from "../auth";
+
+type ErrorLvl = "info" | "warn" | "error" | "none";
+type Method = "POST" | "PUT";
 
 interface Error {
   msg: string;
@@ -12,8 +16,11 @@ interface Params {
   setFieldError?: SetFieldError;
 }
 
-type ErrorLvl = "info" | "warn" | "error" | "none";
-type Method = "POST" | "PUT";
+interface FetchEditParams<ResultShape extends object> {
+  apiDomain?: string;
+  errorLvl?: ErrorLvl;
+  parseEditResult?: (d: any) => { result?: ResultShape; errors?: Array<Error> };
+}
 
 type NotifyNonFieldErrors = (
   data: object,
@@ -22,8 +29,17 @@ type NotifyNonFieldErrors = (
 ) => void;
 type SetFieldError = (name: string, error: string) => any;
 
-function useFetchEdit<ResultShape extends object = {}>(errorLvl?: ErrorLvl) {
-  const { notify, restFetch } = useRestFetch<ResultShape>(errorLvl);
+function useFetchEdit<ResultShape extends object = {}>(
+  fetchEditParams?: FetchEditParams<ResultShape>
+) {
+  const { defaultApiDomain, defaultParseEditResult } = useAuthContext();
+  const {
+    apiDomain = defaultApiDomain,
+    errorLvl,
+    parseEditResult = defaultParseEditResult
+  } = fetchEditParams || {};
+
+  const { notify, restFetch } = useRestFetch<ResultShape>(apiDomain, errorLvl);
 
   const notifyNonFieldErrors = useCallback<NotifyNonFieldErrors>(
     (data, errors, setFieldError) => {
@@ -52,7 +68,7 @@ function useFetchEdit<ResultShape extends object = {}>(errorLvl?: ErrorLvl) {
       });
       if (!res) return;
 
-      const { errors, result } = res;
+      const { errors, result } = parseEditResult(res);
       if (errors) {
         notifyNonFieldErrors(data, errors, setFieldError);
         throw errors;

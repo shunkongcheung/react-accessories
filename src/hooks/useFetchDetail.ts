@@ -1,21 +1,36 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import useRestFetch from "./useRestFetch";
+import { useAuthContext } from "../auth";
 
 type ErrorLvl = "warn" | "error" | "info";
 
+interface FetchDetailParams<Shape> {
+  apiDomain?: string;
+  errorLvl?: ErrorLvl;
+  parseDetailResult: (d: any) => { result?: Shape; errors: any };
+}
+
 function useFetchDetail<Shape extends object>(
   initialValues: Shape,
-  errorLvl?: ErrorLvl
+  fetchDetailParams?: FetchDetailParams<Shape>
 ) {
   interface FetchDetailState {
     loading: boolean;
     result: Shape;
   }
+  const { defaultApiDomain, defaultParseDetailResult } = useAuthContext();
+
+  const {
+    apiDomain = defaultApiDomain,
+    errorLvl,
+    parseDetailResult = defaultParseDetailResult
+  } = fetchDetailParams || {};
+
   const [fetchDetailState, setFetchDetailState] = useState<FetchDetailState>({
     loading: true,
     result: initialValues
   });
-  const { notify, restFetch } = useRestFetch<Shape>(errorLvl);
+  const { notify, restFetch } = useRestFetch<Shape>(apiDomain, errorLvl);
   const initialValuesRef = useRef<Shape>(initialValues);
 
   const fetchDetail = useCallback(
@@ -24,10 +39,12 @@ function useFetchDetail<Shape extends object>(
       const res = await restFetch(url, { queryParams });
       if (!res) return;
 
-      const { result, errors } = res;
+      const { result, errors } = parseDetailResult(res);
       if (errors) notify(errors);
-      if (!result) return;
-      setFetchDetailState({ result, loading: false });
+      setFetchDetailState(oState => ({
+        result: result || oState.result,
+        loading: false
+      }));
     },
     [notify, restFetch]
   );

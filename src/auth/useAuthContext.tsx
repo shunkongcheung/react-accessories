@@ -4,17 +4,33 @@ import useAuthProvider from "./useAuthProvider";
 
 type ErrorLvl = "info" | "warn" | "error" | "none";
 
+interface Error {
+  msg: string;
+  param?: string;
+}
+
+interface ParsedResult {
+  result?: any;
+  errors?: Array<Error>;
+}
+
 interface AuthContextProviderProps<T extends object> {
   children: React.ReactNode;
   dataAttr?: string;
   defaultApiDomain?: string;
   defaultUser: T;
+  defaultParseDetailResult?: (data: any) => ParsedResult;
+  defaultParseEditResult?: (data: any) => ParsedResult;
+  defaultParseListResult?: (data: any) => ParsedResult;
   notify?: (msg: string, lvl: ErrorLvl) => any;
 }
 
 interface AuthContextShape<User extends object> {
   dataAttr: string;
   defaultApiDomain: string;
+  defaultParseDetailResult: (data: any) => ParsedResult;
+  defaultParseEditResult: (data: any) => ParsedResult;
+  defaultParseListResult: (data: any) => ParsedResult;
   handleTokenChange: (t: string) => void;
   token: string;
   isLogined: boolean;
@@ -25,6 +41,9 @@ interface AuthContextShape<User extends object> {
 const AuthContext = React.createContext<AuthContextShape<any>>({
   dataAttr: "result",
   defaultApiDomain: "",
+  defaultParseDetailResult: d => ({ result: d }),
+  defaultParseEditResult: d => ({ result: d }),
+  defaultParseListResult: d => ({ result: d }),
   handleTokenChange: () => {},
   notify: () => {},
   token: "",
@@ -38,6 +57,9 @@ function AuthContextProviderUnMemo<T extends object>(
   const {
     dataAttr = "result",
     defaultApiDomain = "",
+    defaultParseDetailResult = d => ({ result: d }),
+    defaultParseEditResult = d => ({ result: d }),
+    defaultParseListResult = d => ({ result: d }),
     children,
     defaultUser,
     notify = () => {}
@@ -45,7 +67,15 @@ function AuthContextProviderUnMemo<T extends object>(
   const auth = useAuthProvider<T>({ defaultUser });
   return (
     <AuthContext.Provider
-      value={{ ...auth, dataAttr, defaultApiDomain, notify }}
+      value={{
+        ...auth,
+        dataAttr,
+        defaultApiDomain,
+        defaultParseDetailResult,
+        defaultParseEditResult,
+        defaultParseListResult,
+        notify
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -4,6 +4,11 @@ import { useAuthContext } from "../auth";
 
 type ErrorLvl = "warn" | "error" | "info";
 
+interface Params {
+  queryParams?: object;
+  isAuthenticated?: boolean;
+}
+
 interface FetchDetailParams<Shape> {
   apiDomain?: string;
   errorLvl?: ErrorLvl;
@@ -34,9 +39,10 @@ function useFetchDetail<Shape extends object>(
   const initialValuesRef = useRef<Shape>(initialValues);
 
   const fetchDetail = useCallback(
-    async (url: string, queryParams?: object) => {
+    async (url: string, params?: Params) => {
+      const { queryParams, isAuthenticated } = params || {};
       setFetchDetailState(oState => ({ ...oState, loading: true }));
-      const res = await restFetch(url, { queryParams });
+      const res = await restFetch(url, { queryParams, isAuthenticated });
       if (!res) return;
 
       const { result, errors } = parseDetailResult(res);

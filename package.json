@@ -1,6 +1,6 @@
 {
   "name": "react-accessories",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A react accessories library for making CRUD restful call and handling authentication",
   "main": "build/index.js",
   "module": "build/index.es.js",

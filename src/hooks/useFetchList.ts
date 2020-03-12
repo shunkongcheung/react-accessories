@@ -54,7 +54,11 @@ function useFetchList<Shape extends object>(
       setFetchListState(oState => ({ ...oState, loading: true }));
       const res = await restFetch(url, { ...params });
       const { queryParams = {} } = params || {};
-      if (!res) return;
+      if (!res) {
+        setFetchListState(oState => ({ ...oState, loading: false }));
+        return;
+      }
+
       const { currentPage, maxPage, result, errors } = parseListResult(
         res,
         queryParams

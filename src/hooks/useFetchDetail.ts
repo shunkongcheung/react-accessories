@@ -43,7 +43,10 @@ function useFetchDetail<Shape extends object>(
       const { queryParams, isAuthenticated } = params || {};
       setFetchDetailState(oState => ({ ...oState, loading: true }));
       const res = await restFetch(url, { queryParams, isAuthenticated });
-      if (!res) return;
+      if (!res) {
+        setFetchDetailState(oState => ({ ...oState, loading: false }));
+        return;
+      }
 
       const { result, errors } = parseDetailResult(res);
       if (errors) notify(errors);

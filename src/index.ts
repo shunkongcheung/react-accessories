@@ -5,7 +5,8 @@ import {
   useFakeFetchList,
   useFetchDetail,
   useFetchEdit,
-  useFetchList
+  useFetchList,
+  useRestFetch
 } from "./hooks";
 
 export {
@@ -16,5 +17,6 @@ export {
   useFetchDetail,
   useFetchEdit,
   useFetchList,
+  useRestFetch,
   AuthContextProvider
 };
